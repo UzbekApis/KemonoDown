@@ -1,0 +1,16 @@
+# Flask web framework
+Flask==2.3.3
+Werkzeug==2.3.7
+
+# HTTP requests
+requests==2.31.0
+cloudscraper==1.2.71
+
+# Image processing
+Pillow==10.0.0
+
+# Database
+# SQLite3 is included in Python standard library
+
+# Additional dependencies
+python-dateutil==2.8.2

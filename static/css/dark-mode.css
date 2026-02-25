@@ -1,0 +1,539 @@
+/* ============================================
+   Kemono WebApp - Dark Mode Styles
+   Smooth transitions between themes
+   ============================================ */
+
+/* ============================================
+   Dark Mode Variables
+   ============================================ */
+[data-bs-theme="dark"] {
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #21262d;
+    --bg-hover: #30363d;
+    
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    
+    --border-color: #30363d;
+    --border-hover: #484f58;
+    
+    --card-bg: #161b22;
+    --card-border: #30363d;
+    
+    --input-bg: #0d1117;
+    --input-border: #30363d;
+    --input-focus: #1f6feb;
+    
+    --link-color: #58a6ff;
+    --link-hover: #79c0ff;
+}
+
+/* ============================================
+   Smooth Transitions
+   ============================================ */
+* {
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+/* Disable transitions on page load */
+.preload * {
+    transition: none !important;
+}
+
+/* ============================================
+   Dark Mode Base Styles
+   ============================================ */
+[data-bs-theme="dark"] body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .container,
+[data-bs-theme="dark"] .container-fluid {
+    background-color: transparent;
+}
+
+/* ============================================
+   Cards in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .card {
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+[data-bs-theme="dark"] .card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    border-color: var(--border-hover);
+}
+
+[data-bs-theme="dark"] .card-header {
+    background-color: var(--bg-tertiary);
+    border-bottom-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .card-body {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .card-footer {
+    background-color: var(--bg-tertiary);
+    border-top-color: var(--border-color);
+}
+
+/* ============================================
+   Navbar in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .navbar {
+    background-color: var(--bg-secondary) !important;
+    border-bottom: 1px solid var(--border-color);
+}
+
+[data-bs-theme="dark"] .navbar-brand {
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .nav-link {
+    color: var(--text-secondary);
+}
+
+[data-bs-theme="dark"] .nav-link:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-hover);
+}
+
+[data-bs-theme="dark"] .nav-link.active {
+    color: var(--text-primary);
+    background-color: var(--bg-hover);
+}
+
+/* ============================================
+   Forms in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .form-control:focus,
+[data-bs-theme="dark"] .form-select:focus {
+    background-color: var(--input-bg);
+    border-color: var(--input-focus);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 0.25rem rgba(31, 111, 235, 0.25);
+}
+
+[data-bs-theme="dark"] .form-control::placeholder {
+    color: var(--text-muted);
+}
+
+[data-bs-theme="dark"] .form-label {
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .form-text {
+    color: var(--text-secondary);
+}
+
+[data-bs-theme="dark"] .form-check-input {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+}
+
+[data-bs-theme="dark"] .form-check-input:checked {
+    background-color: #1f6feb;
+    border-color: #1f6feb;
+}
+
+[data-bs-theme="dark"] .form-check-label {
+    color: var(--text-primary);
+}
+
+/* ============================================
+   Buttons in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .btn-outline-light {
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .btn-outline-light:hover {
+    background-color: var(--bg-hover);
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .btn-outline-primary {
+    color: #58a6ff;
+    border-color: #58a6ff;
+}
+
+[data-bs-theme="dark"] .btn-outline-primary:hover {
+    background-color: #58a6ff;
+    border-color: #58a6ff;
+    color: #0d1117;
+}
+
+/* ============================================
+   List Groups in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .list-group-item {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .list-group-item:hover {
+    background-color: var(--bg-hover);
+}
+
+/* ============================================
+   Modals in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .modal-content {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .modal-header {
+    background-color: var(--bg-tertiary);
+    border-bottom-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .modal-body {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .modal-footer {
+    background-color: var(--bg-tertiary);
+    border-top-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* ============================================
+   Toast Notifications in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .toast {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+[data-bs-theme="dark"] .toast-header {
+    background-color: var(--bg-tertiary);
+    border-bottom-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .toast-body {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* ============================================
+   Progress Bars in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .progress {
+    background-color: var(--bg-tertiary);
+}
+
+[data-bs-theme="dark"] .progress-bar {
+    background-color: #1f6feb;
+}
+
+/* ============================================
+   Badges in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .badge {
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .badge.bg-primary {
+    background-color: #1f6feb !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-success {
+    background-color: #238636 !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-danger {
+    background-color: #da3633 !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-warning {
+    background-color: #9e6a03 !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-info {
+    background-color: #0969da !important;
+}
+
+[data-bs-theme="dark"] .badge.bg-secondary {
+    background-color: #6e7681 !important;
+}
+
+/* ============================================
+   Tables in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .table {
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .table thead {
+    background-color: var(--bg-tertiary);
+}
+
+[data-bs-theme="dark"] .table tbody tr {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .table tbody tr:hover {
+    background-color: var(--bg-hover);
+}
+
+/* ============================================
+   Dropdowns in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .dropdown-menu {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .dropdown-item {
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .dropdown-item:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .dropdown-divider {
+    border-top-color: var(--border-color);
+}
+
+/* ============================================
+   Footer in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] footer {
+    background-color: var(--bg-secondary) !important;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ============================================
+   Links in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] a {
+    color: var(--link-color);
+}
+
+[data-bs-theme="dark"] a:hover {
+    color: var(--link-hover);
+}
+
+/* ============================================
+   Text Colors in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .text-muted {
+    color: var(--text-muted) !important;
+}
+
+[data-bs-theme="dark"] .text-secondary {
+    color: var(--text-secondary) !important;
+}
+
+/* ============================================
+   Library Grid in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .library-item {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+}
+
+[data-bs-theme="dark"] .library-item:hover {
+    border-color: var(--border-hover);
+}
+
+[data-bs-theme="dark"] .library-item-overlay {
+    background: linear-gradient(to top, rgba(13, 17, 23, 0.9), transparent);
+}
+
+/* ============================================
+   Search Results in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .search-result-card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .search-result-card:hover {
+    background-color: var(--bg-hover);
+    border-color: var(--border-hover);
+}
+
+/* ============================================
+   Loading States in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .loading-spinner {
+    border-color: rgba(255, 255, 255, 0.1);
+    border-top-color: #58a6ff;
+}
+
+[data-bs-theme="dark"] .skeleton {
+    background: linear-gradient(90deg, #21262d 25%, #30363d 50%, #21262d 75%);
+    background-size: 200% 100%;
+}
+
+/* ============================================
+   Alerts in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] .alert {
+    border-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .alert-primary {
+    background-color: rgba(31, 111, 235, 0.15);
+    border-color: #1f6feb;
+    color: #58a6ff;
+}
+
+[data-bs-theme="dark"] .alert-success {
+    background-color: rgba(35, 134, 54, 0.15);
+    border-color: #238636;
+    color: #3fb950;
+}
+
+[data-bs-theme="dark"] .alert-danger {
+    background-color: rgba(218, 54, 51, 0.15);
+    border-color: #da3633;
+    color: #f85149;
+}
+
+[data-bs-theme="dark"] .alert-warning {
+    background-color: rgba(158, 106, 3, 0.15);
+    border-color: #9e6a03;
+    color: #d29922;
+}
+
+[data-bs-theme="dark"] .alert-info {
+    background-color: rgba(9, 105, 218, 0.15);
+    border-color: #0969da;
+    color: #58a6ff;
+}
+
+/* ============================================
+   Scrollbar in Dark Mode
+   ============================================ */
+[data-bs-theme="dark"] ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+[data-bs-theme="dark"] ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+[data-bs-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: var(--bg-hover);
+    border-radius: 6px;
+}
+
+[data-bs-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--border-hover);
+}
+
+/* ============================================
+   Theme Toggle Button
+   ============================================ */
+#themeToggle {
+    transition: transform 0.3s ease;
+}
+
+#themeToggle:hover {
+    transform: rotate(20deg);
+}
+
+#themeToggle:active {
+    transform: rotate(20deg) scale(0.95);
+}
+
+/* ============================================
+   Light Mode Overrides
+   ============================================ */
+[data-bs-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f6f8fa;
+    --bg-tertiary: #ffffff;
+    --bg-hover: #f6f8fa;
+    
+    --text-primary: #24292f;
+    --text-secondary: #57606a;
+    --text-muted: #6e7781;
+    
+    --border-color: #d0d7de;
+    --border-hover: #afb8c1;
+    
+    --card-bg: #ffffff;
+    --card-border: #d0d7de;
+}
+
+[data-bs-theme="light"] body {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+[data-bs-theme="light"] .card {
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+}
+
+/* ============================================
+   Responsive Dark Mode Adjustments
+   ============================================ */
+@media (max-width: 767px) {
+    [data-bs-theme="dark"] .navbar {
+        background-color: var(--bg-primary) !important;
+    }
+    
+    [data-bs-theme="dark"] .card {
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* ============================================
+   Print Mode (Force Light)
+   ============================================ */
+@media print {
+    [data-bs-theme="dark"] {
+        --bg-primary: #ffffff;
+        --bg-secondary: #ffffff;
+        --text-primary: #000000;
+        --text-secondary: #333333;
+    }
+    
+    [data-bs-theme="dark"] body {
+        background-color: white;
+        color: black;
+    }
+    
+    [data-bs-theme="dark"] .card {
+        background-color: white;
+        border-color: #ddd;
+    }
+}

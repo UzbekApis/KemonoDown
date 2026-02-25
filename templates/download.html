@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+
+{% block title %}Download - Kemono WebApp{% endblock %}
+
+{% block extra_css %}
+<style>
+    .file-type-checkbox {
+        cursor: pointer;
+        user-select: none;
+    }
+    .progress-section {
+        display: none;
+    }
+    .progress-section.active {
+        display: block;
+    }
+    
+    /* Active Downloads Styles */
+    .download-card {
+        border-left: 4px solid #0d6efd;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .download-card.status-downloading {
+        border-left-color: #0d6efd;
+    }
+    
+    .download-card.status-paused {
+        border-left-color: #ffc107;
+    }
+    
+    .download-card.status-pending {
+        border-left-color: #6c757d;
+    }
+    
+    .download-card.status-failed {
+        border-left-color: #dc3545;
+    }
+    
+    .download-card.status-completed {
+        border-left-color: #28a745;
+        opacity: 0.8;
+    }
+    
+    .download-card:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .download-url {
+        font-size: 0.85rem;
+        color: #6c757d;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .download-speed {
+        font-size: 0.85rem;
+        color: #28a745;
+        font-weight: 500;
+    }
+    
+    .btn-group-sm .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Multi URL Mode */
+    #urlTextarea {
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+    }
+    
+    #toggleMultiUrlBtn {
+        white-space: nowrap;
+    }
+    
+    #startMultiBtn {
+        position: relative;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Page Header -->
+            <div class="mb-4">
+                <h2>
+                    <i class="bi bi-download"></i> Download Content
+                </h2>
+                <p class="text-muted">Enter a Kemono URL to download content</p>
+            </div>
+
+            <!-- Download Form -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form id="downloadForm">
+                        <!-- URL Input -->
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label for="urlInput" class="form-label mb-0">
+                                    <i class="bi bi-link-45deg"></i> Kemono URL
+                                </label>
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="toggleMultiUrlBtn">
+                                    <i class="bi bi-plus-circle"></i> Multi URL
+                                </button>
+                            </div>
+                            
+                            <!-- Single URL Input -->
+                            <div id="singleUrlInput">
+                                <input 
+                                    type="text" 
+                                    class="form-control form-control-lg" 
+                                    id="urlInput" 
+                                    placeholder="https://kemono.cr/patreon/user/12345/post/67890"
+                                >
+                                <div class="form-text">
+                                    Supported: Artist profile URLs and individual post URLs
+                                </div>
+                            </div>
+                            
+                            <!-- Multi URL Input -->
+                            <div id="multiUrlInput" style="display: none;">
+                                <textarea 
+                                    class="form-control" 
+                                    id="urlTextarea" 
+                                    rows="6"
+                                    placeholder="Enter multiple URLs (one per line):&#10;https://kemono.cr/patreon/user/12345/post/67890&#10;https://kemono.cr/fanbox/user/54321/post/98765&#10;..."
+                                ></textarea>
+                                <div class="form-text">
+                                    Enter one URL per line. Invalid URLs will be skipped.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- File Type Filters -->
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-funnel"></i> File Types
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-6 col-md-3">
+                                    <div class="form-check form-check-inline w-100">
+                                        <input class="form-check-input" type="checkbox" id="filterAll" value="all" checked>
+                                        <label class="form-check-label file-type-checkbox w-100" for="filterAll">
+                                            <i class="bi bi-files"></i> All Files
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="form-check form-check-inline w-100">
+                                        <input class="form-check-input" type="checkbox" id="filterImages" value="images">
+                                        <label class="form-check-label file-type-checkbox w-100" for="filterImages">
+                                            <i class="bi bi-image"></i> Images
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="form-check form-check-inline w-100">
+                                        <input class="form-check-input" type="checkbox" id="filterVideos" value="videos">
+                                        <label class="form-check-label file-type-checkbox w-100" for="filterVideos">
+                                            <i class="bi bi-camera-video"></i> Videos
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="form-check form-check-inline w-100">
+                                        <input class="form-check-input" type="checkbox" id="filterArchives" value="archives">
+                                        <label class="form-check-label file-type-checkbox w-100" for="filterArchives">
+                                            <i class="bi bi-file-zip"></i> Archives
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="form-check form-check-inline w-100">
+                                        <input class="form-check-input" type="checkbox" id="filterAudio" value="audio">
+                                        <label class="form-check-label file-type-checkbox w-100" for="filterAudio">
+                                            <i class="bi bi-music-note"></i> Audio
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg" id="startBtn">
+                                <i class="bi bi-play-circle"></i> Start Download
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" id="startMultiBtn" style="display: none;">
+                                <i class="bi bi-collection-play"></i> Start Multi Download (<span id="urlCount">0</span> URLs)
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="card progress-section" id="progressSection">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-hourglass-split"></i> Download Progress
+                    </h5>
+                    <span class="badge bg-primary" id="statusBadge">Preparing...</span>
+                </div>
+                <div class="card-body">
+                    <!-- Download Info -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Files:</span>
+                            <span id="fileCount">0 / 0</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Progress:</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="progress mb-3" style="height: 30px;">
+                        <div 
+                            class="progress-bar progress-bar-striped progress-bar-animated" 
+                            role="progressbar" 
+                            id="progressBar"
+                            style="width: 0%"
+                        >
+                            <span id="progressText">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Current File -->
+                    <div class="mb-3">
+                        <small class="text-muted">Current file:</small>
+                        <div class="text-truncate" id="currentFile">-</div>
+                    </div>
+
+                    <!-- Control Buttons -->
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-warning" id="pauseBtn" disabled>
+                            <i class="bi bi-pause-circle"></i> Pause
+                        </button>
+                        <button class="btn btn-success" id="resumeBtn" style="display: none;">
+                            <i class="bi bi-play-circle"></i> Resume
+                        </button>
+                        <button class="btn btn-danger" id="cancelBtn" disabled>
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Downloads List -->
+            <div class="card mt-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0 d-inline">
+                            <i class="bi bi-list-task"></i> Active Downloads
+                        </h5>
+                        <span class="badge bg-secondary ms-2" id="activeDownloadsCount">0</span>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger" id="clearCompletedBtn" style="display: none;">
+                        <i class="bi bi-trash"></i> Clear Completed
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="activeDownloadsList">
+                        <div class="text-center text-muted py-3" id="noDownloadsMessage">
+                            <i class="bi bi-inbox display-4"></i>
+                            <p class="mt-2">No active downloads</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/download.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Kemono WebApp{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center py-5">
+                    <h1 class="display-4 mb-3">
+                        <i class="bi bi-cloud-download"></i> Welcome to Kemono WebApp
+                    </h1>
+                    <p class="lead mb-4">
+                        Download and manage content from Kemono.cr with ease
+                    </p>
+                    <div class="d-flex gap-2 justify-content-center flex-wrap">
+                        <a href="{{ url_for('download.download_page') }}" class="btn btn-light btn-lg">
+                            <i class="bi bi-download"></i> Start Download
+                        </a>
+                        <a href="{{ url_for('search.search_page') }}" class="btn btn-outline-light btn-lg">
+                            <i class="bi bi-search"></i> Search Artists
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="bi bi-download display-4 text-primary mb-3"></i>
+                    <h3 class="mb-2">{{ stats.total_downloads }}</h3>
+                    <p class="text-muted mb-0">Total Downloads</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="bi bi-collection display-4 text-success mb-3"></i>
+                    <h3 class="mb-2">{{ stats.library_files }}</h3>
+                    <p class="text-muted mb-0">Files in Library</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <i class="bi bi-hdd display-4 text-info mb-3"></i>
+                    <h3 class="mb-2">{{ stats.library_size }}</h3>
+                    <p class="text-muted mb-0">Library Size</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Downloads -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clock-history"></i> Recent Downloads
+                    </h5>
+                    <a href="{{ url_for('library.library_page') }}" class="btn btn-sm btn-outline-primary">
+                        View All <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if recent_downloads %}
+                    <div class="list-group list-group-flush">
+                        {% for download in recent_downloads %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">
+                                        {% if download.post_title %}
+                                            {{ download.post_title }}
+                                        {% else %}
+                                            {{ download.filename }}
+                                        {% endif %}
+                                    </h6>
+                                    <small class="text-muted">
+                                        <i class="bi bi-person"></i> {{ download.service }}/{{ download.user_id }}
+                                        {% if download.post_id %}
+                                        | <i class="bi bi-file-post"></i> Post: {{ download.post_id }}
+                                        {% endif %}
+                                    </small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i> Completed
+                                    </span>
+                                    <br>
+                                    <small class="text-muted">{{ download.downloaded_at }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox display-1"></i>
+                        <p class="mt-3">No recent downloads</p>
+                        <a href="{{ url_for('download.download_page') }}" class="btn btn-primary">
+                            Start Your First Download
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h4 class="mb-3">Features</h4>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-link-45deg display-4 text-primary mb-3"></i>
+                    <h6>URL Download</h6>
+                    <p class="small text-muted">Paste Kemono URLs to download content</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-funnel display-4 text-success mb-3"></i>
+                    <h6>File Filtering</h6>
+                    <p class="small text-muted">Filter by images, videos, archives</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-search display-4 text-info mb-3"></i>
+                    <h6>Smart Search</h6>
+                    <p class="small text-muted">Find artists and posts quickly</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-phone display-4 text-warning mb-3"></i>
+                    <h6>Mobile Optimized</h6>
+                    <p class="small text-muted">Works great on Termux</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

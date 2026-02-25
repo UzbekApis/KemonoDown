@@ -1,0 +1,49 @@
+<!-- Gallery Modal (Fullscreen Lightbox) -->
+<div class="modal fade" id="galleryModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header border-0 py-2">
+                <div class="d-flex align-items-center w-100">
+                    <span class="file-counter me-auto" id="galleryCounter">1 / 1</span>
+                    <span class="file-name me-3 text-truncate" id="galleryFileName" style="max-width: 50%;">filename.jpg</span>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" id="closeGalleryBtn"></button>
+                </div>
+            </div>
+            <div class="modal-body d-flex align-items-center justify-content-center p-0 position-relative" id="galleryBody">
+                <!-- Navigation Buttons -->
+                <button class="btn btn-dark btn-lg position-absolute start-0 top-50 translate-middle-y ms-3" id="prevMediaBtn" style="z-index: 10; opacity: 0.7;">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button class="btn btn-dark btn-lg position-absolute end-0 top-50 translate-middle-y me-3" id="nextMediaBtn" style="z-index: 10; opacity: 0.7;">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+
+                <!-- Image viewer -->
+                <img id="galleryImage" class="img-fluid" style="max-width: 90vw; max-height: 85vh; object-fit: contain; display: none; cursor: zoom-in;">
+                
+                <!-- Video viewer -->
+                <video id="galleryVideo" controls style="max-width: 90vw; max-height: 85vh; display: none;">
+                    <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                
+                <!-- Other file types -->
+                <div id="galleryOther" class="text-center" style="display: none;">
+                    <i class="bi bi-file-earmark display-1"></i>
+                    <p class="mt-3">Preview not available</p>
+                    <a href="#" id="downloadFileLink" class="btn btn-primary" download>
+                        <i class="bi bi-download"></i> Download File
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer border-0 py-2 justify-content-center">
+                <!-- Thumbnail Strip -->
+                <div class="thumbnail-strip-container" style="max-width: 90%; overflow-x: auto;">
+                    <div class="d-flex gap-2 py-2" id="thumbnailStrip">
+                        <!-- Thumbnails will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

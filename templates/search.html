@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}Search - Kemono WebApp{% endblock %}
+
+{% block extra_css %}
+<style>
+    .search-result-card {
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .search-result-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .result-avatar {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <!-- Page Header -->
+            <div class="mb-4">
+                <h2>
+                    <i class="bi bi-search"></i> Search
+                </h2>
+                <p class="text-muted">Find artists and posts on Kemono</p>
+            </div>
+
+            <!-- Search Tabs -->
+            <ul class="nav nav-tabs mb-4" id="searchTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button 
+                        class="nav-link active" 
+                        id="artist-tab" 
+                        data-bs-toggle="tab" 
+                        data-bs-target="#artist-search" 
+                        type="button"
+                    >
+                        <i class="bi bi-person"></i> Artist Search
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button 
+                        class="nav-link" 
+                        id="post-tab" 
+                        data-bs-toggle="tab" 
+                        data-bs-target="#post-search" 
+                        type="button"
+                    >
+                        <i class="bi bi-file-post"></i> Post Search
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="searchTabContent">
+                <!-- Artist Search Tab -->
+                <div class="tab-pane fade show active" id="artist-search" role="tabpanel">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form id="artistSearchForm">
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-person-search"></i>
+                                    </span>
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        id="artistSearchInput" 
+                                        placeholder="Enter artist name..."
+                                        required
+                                    >
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="bi bi-search"></i> Search
+                                    </button>
+                                </div>
+                                <div class="form-text mt-2">
+                                    Search uses fuzzy matching to find similar artist names
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Artist Search Results -->
+                    <div id="artistResults">
+                        <div class="text-center text-muted py-5">
+                            <i class="bi bi-search display-1"></i>
+                            <p class="mt-3">Enter an artist name to search</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Post Search Tab -->
+                <div class="tab-pane fade" id="post-search" role="tabpanel">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form id="postSearchForm">
+                                <div class="input-group input-group-lg mb-3">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-file-text"></i>
+                                    </span>
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        id="postSearchInput" 
+                                        placeholder="Enter post title or keywords..."
+                                        required
+                                    >
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="bi bi-search"></i> Search
+                                    </button>
+                                </div>
+                                
+                                <!-- Advanced Filters -->
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <select class="form-select" id="serviceFilter">
+                                            <option value="">All Services</option>
+                                            <option value="patreon">Patreon</option>
+                                            <option value="fanbox">Fanbox</option>
+                                            <option value="gumroad">Gumroad</option>
+                                            <option value="subscribestar">SubscribeStar</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select class="form-select" id="sortFilter">
+                                            <option value="recent">Most Recent</option>
+                                            <option value="popular">Most Popular</option>
+                                            <option value="random">Random</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Post Search Results -->
+                    <div id="postResults">
+                        <div class="text-center text-muted py-5" id="postSearchPlaceholder">
+                            <i class="bi bi-search display-1"></i>
+                            <p class="mt-3">Enter keywords to search posts</p>
+                        </div>
+                        
+                        <!-- Multi-select toolbar -->
+                        <div class="card mb-3" id="multiSelectToolbar" style="display: none;">
+                            <div class="card-body py-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="badge bg-primary" id="selectedCount">0</span>
+                                        <span class="ms-2">posts selected</span>
+                                    </div>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-primary" id="selectAllBtn">
+                                            <i class="bi bi-check-all"></i> Select All
+                                        </button>
+                                        <button class="btn btn-outline-secondary" id="deselectAllBtn">
+                                            <i class="bi bi-x"></i> Deselect All
+                                        </button>
+                                        <button class="btn btn-success" id="downloadSelectedBtn">
+                                            <i class="bi bi-download"></i> Download Selected
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row" id="postResultsGrid"></div>
+                        
+                        <!-- Pagination Controls -->
+                        <div class="d-flex justify-content-center mt-4" id="paginationControls" style="display: none !important;">
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-outline-primary" id="prevPageBtn" disabled>
+                                    <i class="bi bi-chevron-left"></i> Previous
+                                </button>
+                                <button class="btn btn-outline-secondary" disabled id="pageInfo">
+                                    Page 1
+                                </button>
+                                <button class="btn btn-outline-primary" id="nextPageBtn">
+                                    Next <i class="bi bi-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div class="text-center py-5" id="loadingSpinner" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-muted">Searching...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Result Card Template (Hidden) -->
+<template id="artistCardTemplate">
+    <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card search-result-card h-100" data-artist-url="">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="" alt="Avatar" class="result-avatar me-3" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22%3E%3Crect width=%2260%22 height=%2260%22 fill=%22%23ddd%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2224%22 fill=%22%23999%22%3E?%3C/text%3E%3C/svg%3E'">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-1 artist-name">Artist Name</h6>
+                        <small class="text-muted artist-service">Service</small>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                        <i class="bi bi-file-post"></i> <span class="post-count">0</span> posts
+                    </small>
+                    <button class="btn btn-sm btn-primary download-artist-btn">
+                        <i class="bi bi-download"></i> Download
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="postCardTemplate">
+    <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card search-result-card h-100" data-post-url="">
+            <div class="position-relative">
+                <input type="checkbox" class="form-check-input position-absolute top-0 end-0 m-2 post-checkbox" style="z-index: 10; width: 24px; height: 24px; cursor: pointer;">
+                <img src="" class="card-img-top post-thumbnail" alt="Post thumbnail" style="height: 200px; object-fit: cover;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%25%22 height=%22200%22%3E%3Crect width=%22100%25%22 height=%22200%22 fill=%22%23ddd%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2224%22 fill=%22%23999%22%3ENo Image%3C/text%3E%3C/svg%3E'">
+            </div>
+            <div class="card-body">
+                <h6 class="card-title post-title">Post Title</h6>
+                <p class="card-text">
+                    <small class="text-muted">
+                        <i class="bi bi-person"></i> <span class="post-artist">Artist</span><br>
+                        <i class="bi bi-calendar"></i> <span class="post-date">Date</span>
+                    </small>
+                </p>
+                <button class="btn btn-sm btn-primary w-100 download-post-btn">
+                    <i class="bi bi-download"></i> Download Post
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/search.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Gallery - {{ post_title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>{{ post_title }}</h3>
+                <a href="/library" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Library
+                </a>
+            </div>
+            
+            <div class="row g-3">
+                {% for file in files %}
+                <div class="col-md-3 col-sm-4 col-6">
+                    <div class="card h-100">
+                        {% if file.file_type == 'image' %}
+                            <img src="/library/file/{{ file.id }}/view" 
+                                 class="card-img-top" 
+                                 style="height: 200px; object-fit: cover;"
+                                 alt="{{ file.filename }}">
+                        {% elif file.file_type == 'video' %}
+                            <video class="card-img-top" style="height: 200px; object-fit: cover;" controls>
+                                <source src="/library/file/{{ file.id }}/view" type="video/mp4">
+                            </video>
+                        {% elif file.file_type == 'archive' %}
+                            <div class="card-img-top bg-warning d-flex align-items-center justify-content-center" 
+                                 style="height: 200px;">
+                                <i class="bi bi-file-zip" style="font-size: 4rem; color: white;"></i>
+                            </div>
+                        {% else %}
+                            <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" 
+                                 style="height: 200px;">
+                                <i class="bi bi-file-earmark" style="font-size: 4rem; color: white;"></i>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-body p-2">
+                            <p class="card-text small text-truncate mb-1" title="{{ file.filename }}">
+                                {{ file.filename }}
+                            </p>
+                            
+                            {% if file.file_type == 'archive' and file.original_url %}
+                                <a href="{{ file.original_url }}" 
+                                   class="btn btn-warning btn-sm w-100" 
+                                   target="_blank">
+                                    <i class="bi bi-download"></i> Download ZIP
+                                </a>
+                            {% else %}
+                                <div class="btn-group btn-group-sm w-100">
+                                    <a href="/library/file/{{ file.id }}/view" 
+                                       class="btn btn-outline-primary" 
+                                       target="_blank">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="/library/file/{{ file.id }}/download" 
+                                       class="btn btn-outline-success">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

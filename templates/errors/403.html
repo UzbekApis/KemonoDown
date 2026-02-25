@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}403 - Ruxsat berilmagan{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <h1 class="display-1">403</h1>
+            <h2 class="mb-4">Ruxsat berilmagan</h2>
+            <p class="lead mb-4">Kechirasiz, bu sahifaga kirish huquqingiz yo'q.</p>
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary">
+                <i class="bi bi-house-door"></i> Bosh sahifaga qaytish
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

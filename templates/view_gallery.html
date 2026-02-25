@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}Gallery - {{ post_title }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: #000;
+        overflow: hidden;
+    }
+    
+    .gallery-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: #000;
+    }
+    
+    .gallery-header {
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+    }
+    
+    .gallery-body {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .gallery-image {
+        max-width: 90vw;
+        max-height: 85vh;
+        object-fit: contain;
+    }
+    
+    .gallery-video {
+        max-width: 90vw;
+        max-height: 85vh;
+    }
+    
+    .nav-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        border: none;
+        padding: 1rem 1.5rem;
+        font-size: 2rem;
+        cursor: pointer;
+        z-index: 10;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+    
+    .nav-button:hover {
+        opacity: 1;
+    }
+    
+    .nav-button.prev {
+        left: 1rem;
+    }
+    
+    .nav-button.next {
+        right: 1rem;
+    }
+    
+    .close-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+    }
+    
+    .close-btn:hover {
+        color: #dc3545;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="gallery-container">
+    <!-- Header -->
+    <div class="gallery-header">
+        <div>
+            <span id="fileCounter">1 / {{ files|length }}</span>
+            <span class="mx-2">|</span>
+            <span id="fileName">{{ files[0].name if files else '' }}</span>
+        </div>
+        <button class="close-btn" onclick="window.location.href='/library'">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+    
+    <!-- Body -->
+    <div class="gallery-body">
+        <!-- Navigation Buttons -->
+        <button class="nav-button prev" id="prevBtn">
+            <i class="bi bi-chevron-left"></i>
+        </button>
+        
+        <!-- Media Display -->
+        <div id="mediaContainer"></div>
+        
+        <button class="nav-button next" id="nextBtn">
+            <i class="bi bi-chevron-right"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+    // Gallery data - only images and videos
+    const allFiles = {{ files|tojson|safe }};
+    const files = allFiles.filter(f => f.type === 'image' || f.type === 'video');
+    const postId = '{{ post_id }}';
+    let currentIndex = 0;
+    
+    // Elements
+    const mediaContainer = document.getElementById('mediaContainer');
+    const fileCounter = document.getElementById('fileCounter');
+    const fileName = document.getElementById('fileName');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    // Show media
+    function showMedia(index) {
+        if (index < 0 || index >= files.length) return;
+        
+        currentIndex = index;
+        const file = files[index];
+        
+        // Update counter and filename
+        fileCounter.textContent = `${index + 1} / ${files.length}`;
+        fileName.textContent = file.name;
+        
+        // Clear container
+        mediaContainer.innerHTML = '';
+        
+        // Show appropriate media
+        if (file.type === 'image') {
+            const img = document.createElement('img');
+            img.src = `/view_gallery/file/${postId}/${encodeURIComponent(file.name)}`;
+            img.className = 'gallery-image';
+            img.alt = file.name;
+            mediaContainer.appendChild(img);
+        } else if (file.type === 'video') {
+            const video = document.createElement('video');
+            video.className = 'gallery-video';
+            video.controls = true;
+            video.autoplay = true;
+            
+            const source = document.createElement('source');
+            source.src = `/view_gallery/file/${postId}/${encodeURIComponent(file.name)}`;
+            source.type = 'video/mp4';
+            
+            video.appendChild(source);
+            mediaContainer.appendChild(video);
+        }
+        
+        // Update button states
+        prevBtn.disabled = index === 0;
+        nextBtn.disabled = index === files.length - 1;
+    }
+    
+    function nextMedia() {
+        if (currentIndex < files.length - 1) {
+            showMedia(currentIndex + 1);
+        }
+    }
+    
+    function prevMedia() {
+        if (currentIndex > 0) {
+            showMedia(currentIndex - 1);
+        }
+    }
+    
+    // Event listeners
+    prevBtn.addEventListener('click', prevMedia);
+    nextBtn.addEventListener('click', nextMedia);
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        switch(e.key) {
+            case 'ArrowLeft':
+                e.preventDefault();
+                prevMedia();
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                nextMedia();
+                break;
+            case 'Escape':
+                e.preventDefault();
+                window.location.href = '/library';
+                break;
+        }
+    });
+    
+    // Touch swipe
+    let touchStartX = 0;
+    mediaContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+    });
+    
+    mediaContainer.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+                nextMedia();
+            } else {
+                prevMedia();
+            }
+        }
+    });
+    
+    // Initial load
+    if (files.length > 0) {
+        showMedia(0);
+    } else {
+        mediaContainer.innerHTML = '<div class="text-white">No media files found</div>';
+    }
+</script>
+{% endblock %}
